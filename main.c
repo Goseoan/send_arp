@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
 
   getLocalAddress(ifname, ip, mac, router);
 
-  printf("%s\n",router);
-
-  printf("\nGet Local Information ---------------------------------- \n \
+                                  
+  printf("\nGet Local Information ------------------------ \n \
     - IP ADDR    \t: %s \n \
     - MAC ADDR   \t: %s \n \
     - ROUTER ADDR\t: %s \n \
-    ---------------------------------------------------------- \n"
+    ----------------------------------------- \n"
+                                            
     ,ip,mac,router);
   
   arp_spoof(ifname, ip, mac, router, targetIP, targetMAC); 
