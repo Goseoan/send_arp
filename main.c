@@ -12,26 +12,25 @@ int main(int argc, char *argv[])
   u_int8_t router[IP_ADDR_SIZE];     // router ip
   u_int8_t *ifname;          // interface name
   u_int8_t *targetIP;    // target ip
-  u_int8_t *targetMAC;    // target mac
+  u_int8_t targetMAC[MAC_ADDR_SIZE];    // target mac
 
-  if (argc < 4) 
+  if (argc < 3) 
   {
-    puts("Usage: ./a.out <interface> <target ip address> <target mac address>");
+    puts("Usage: ./a.out <interface> <target ip address>");
     exit(1);
   }
 
   ifname    = argv[1];
   targetIP  = argv[2];
-  targetMAC = argv[3];
+ // targetMAC = argv[3];
 /*  gi->targetIP = *argv[2];
   gi->targetMAC = *argv[3];*/
   
   printf("\nInput Value ---------------------------------- \n \
     - Interface \t: %s \n \
     - Target IP \t: %s \n \
-    - Target Mac\t: %s \n \
     ----------------------------------------- \n"   
-    ,ifname,targetIP,targetMAC);
+    ,ifname,targetIP);
 
   getLocalAddress(ifname, ip, mac, router);
 
@@ -40,10 +39,10 @@ int main(int argc, char *argv[])
     - IP ADDR    \t: %s \n \
     - MAC ADDR   \t: %s \n \
     - ROUTER ADDR\t: %s \n \
-    ----------------------------------------- \n"
-                                            
+    ----------------------------------------- \n"                                            
     ,ip,mac,router);
-  
+
+  arp_request(ifname, ip, mac, targetIP, targetMAC);   
   arp_spoof(ifname, ip, mac, router, targetIP, targetMAC); 
 
   return 0;
