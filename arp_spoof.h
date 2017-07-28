@@ -1,12 +1,10 @@
 #ifndef __ARPSPOOF_H__
 #define __ARPSPOOF_H__
 
-struct getlocal{
-	char *mac;
-	char *ip;
-};
+#define IP_ADDR_SIZE 50
+#define MAC_ADDR_SIZE 50
 
-void getLocalAddress(char * , struct getlocal *);
-void arp_spoof(int , struct getlocal *,char *, char *, char *);
+void getLocalAddress(u_int8_t *, u_int8_t *, u_int8_t *, u_int8_t *);
+void arp_spoof(u_int8_t *, u_int8_t *, u_int8_t *, u_int8_t *, u_int8_t *, u_int8_t *);
 
 #endif

@@ -1,54 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <signal.h>
-#include <sys/socket.h>
-#include <net/ethernet.h>
-#include <net/if.h>
-#include <netpacket/packet.h>
-#include <netinet/if_ether.h>
 
 #include "arp_spoof.h"
-
-
-int sock;
 
 int main(int argc, char *argv[])
 {
 
-  struct getlocal gi;  
-  char ifname[10];
-  
+  u_int8_t mac[MAC_ADDR_SIZE];        // my mac
+  u_int8_t ip[IP_ADDR_SIZE];        // my ip
+  u_int8_t router[IP_ADDR_SIZE];     // router ip
+  u_int8_t *ifname;          // interface name
+  u_int8_t *targetIP;    // target ip
+  u_int8_t *targetMAC;    // target mac
+
   if (argc < 4) 
   {
     puts("Usage: ./a.out <interface> <target ip address> <target mac address>");
     exit(1);
   }
-  
-  printf("input Value \t <interface> : %s \t <ip> : %s \t <mac> : %s \n",argv[1],argv[2],argv[3]);
-  
-  strcpy(ifname,argv[1]);
 
-  getLocalAddress(ifname, &gi);
+  ifname    = argv[1];
+  targetIP  = argv[2];
+  targetMAC = argv[3];
+/*  gi->targetIP = *argv[2];
+  gi->targetMAC = *argv[3];*/
   
-  sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ARP));
-  if (sock < 0)
-  {
-    perror("socket"), exit(1);
-  }
+  printf("\nInput Value ---------------------------------- \n \
+    - Interface \t: %s \n \
+    - Target IP \t: %s \n \
+    - Target Mac\t: %s \n \
+    ----------------------------------------- \n"   
+    ,ifname,targetIP,targetMAC);
 
- // signal(SIGINT, close_sock);
-  arp_spoof(sock, &gi, ifname,argv[2], argv[3]);
+  getLocalAddress(ifname, ip, mac, router);
 
-  close(sock);
+  printf("%s\n",router);
+
+  printf("\nGet Local Information ---------------------------------- \n \
+    - IP ADDR    \t: %s \n \
+    - MAC ADDR   \t: %s \n \
+    - ROUTER ADDR\t: %s \n \
+    ---------------------------------------------------------- \n"
+    ,ip,mac,router);
+  
+  arp_spoof(ifname, ip, mac, router, targetIP, targetMAC); 
 
   return 0;
-}
-
-void close_sock()
-{
-  close(sock);
-  exit(0);
 }
